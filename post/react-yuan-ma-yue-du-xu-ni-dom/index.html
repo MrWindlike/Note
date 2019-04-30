@@ -1,79 +1,88 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="description" content="" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>React源码阅读——虚拟DOM | Gridea</title>
-<link rel="shortcut icon" href="https://mrwindlike.github.io/Note/favicon.ico?v=1556636512160">
+    <meta charset="utf-8" >
+
+<title>React源码阅读——虚拟DOM | Windlike的小屋子</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://mrwindlike.github.io/Note/favicon.ico?v=1556636884102">
 <link rel="stylesheet" href="https://mrwindlike.github.io/Note/styles/main.css">
 
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
-<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
 
 
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://mrwindlike.github.io/Note">
-  <img class="avatar" src="https://mrwindlike.github.io/Note/images/avatar.png?v=1556636512160" alt="">
-  </a>
-  <h1 class="site-title">
-    Gridea
-  </h1>
-  <p class="site-description">
-    温故而知新
-  </p>
-  <div class="menu-container">
-    
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://mrwindlike.github.io/Note">
+        <img src="https://mrwindlike.github.io/Note/images/avatar.png?v=1556636884102" class="site-logo">
+        <h1 class="site-title">Windlike的小屋子</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
       
-        <a href="https://mrwindlike.github.io/Note" class="menu">
-          首页
-        </a>
+        
+          <a href="https://mrwindlike.github.io/Note" class="site-nav">
+            首页
+          </a>
+        
       
-    
+        
+          <a href="https://mrwindlike.github.io/Note/tags" class="site-nav">
+            标签
+          </a>
+        
       
-        <a href="https://mrwindlike.github.io/Note/tags" class="menu">
-          标签
-        </a>
-      
-    
+    </div>
   </div>
-  <div class="social-container">
-    
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
       
-    
+        
       
-    
+        
       
-    
+        
       
-    
+        
       
-    
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
   </div>
 </div>
 
-      
-        <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              React源码阅读——虚拟DOM
-            </h2>
-            <div class="post-info">
-              <time class="post-time">
-                · 2019-04-30 ·
-              </time>
-              
-                <a href="https://mrwindlike.github.io/Note/tag/react" class="post-tags">
-                  # React
-                </a>
-              
-            </div>
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">React源码阅读——虚拟DOM</h2>
+            <div class="post-date">2019-04-30</div>
             
-              <div class="post-feature-image" style="background-image: url('https://blog.ionicframework.com/wp-content/uploads/2019/02/react-beta.png')">
+              <div class="feature-container" style="background-image: url('https://blog.ionicframework.com/wp-content/uploads/2019/02/react-beta.png')">
               </div>
             
             <div class="post-content">
@@ -911,31 +920,53 @@ beginWork(current, workInProgress, nextRenderExpirationTime)
 <p>除此之外还有很多细节等待我们去研究，比如说React是如何更新和删除虚拟DOM的？setState的异步实现原理是怎样的？以后再写文和大家分析和探讨。</p>
 
             </div>
-          </article>
+            
+              <div class="tag-container">
+                
+                  <a href="https://mrwindlike.github.io/Note/tag/react" class="tag">
+                    React
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://mrwindlike.github.io/Note/post/react-yuan-ma-yue-du-gai-kuang">
+                  <h3 class="post-title">
+                    React源码阅读——概况
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
         </div>
-    
-        
-          <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://mrwindlike.github.io/Note/post/react-yuan-ma-yue-du-gai-kuang">
-              <h3 class="post-title">
-                React源码阅读——概况
-              </h3>
-            </a>
-          </div>  
-        
-
-        
-    
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-</div>
-
-<script>
-  hljs.initHighlightingOnLoad()
-</script>
-
       </div>
     </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
   </body>
 </html>
