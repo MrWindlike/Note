@@ -9,9 +9,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://mrwindlike.github.io/Note/favicon.ico?v=1556637009418">
+<link rel="shortcut icon" href="https://mrwindlike.github.io/Note/favicon.ico?v=1556639204514">
 <link rel="stylesheet" href="https://mrwindlike.github.io/Note/styles/main.css">
 
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
 
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -29,7 +35,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://mrwindlike.github.io/Note">
-        <img src="https://mrwindlike.github.io/Note/images/avatar.png?v=1556637009418" class="site-logo">
+        <img src="https://mrwindlike.github.io/Note/images/avatar.png?v=1556639204514" class="site-logo">
         <h1 class="site-title">Windlike的小屋子</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -935,6 +941,10 @@ beginWork(current, workInProgress, nextRenderExpirationTime)
             
               <div class="tag-container">
                 
+                  <a href="https://mrwindlike.github.io/Note/tag/front-end" class="tag">
+                    前端
+                  </a>
+                
                   <a href="https://mrwindlike.github.io/Note/tag/react" class="tag">
                     React
                   </a>
@@ -952,6 +962,12 @@ beginWork(current, workInProgress, nextRenderExpirationTime)
               </div>
             
 
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
             
 
           </div>
@@ -976,6 +992,29 @@ var app = new Vue({
 })
 
 </script>
+
+
+  
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '',
+        clientSecret: '',
+        repo: '',
+        owner: '',
+        admin: [''],
+        id: location.pathname,      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
 
 
 

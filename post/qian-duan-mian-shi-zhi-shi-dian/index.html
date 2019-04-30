@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>前端面试知识点 | Windlike的小屋子</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://mrwindlike.github.io/Note/favicon.ico?v=1556639204514">
+<link rel="stylesheet" href="https://mrwindlike.github.io/Note/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://mrwindlike.github.io/Note">
+        <img src="https://mrwindlike.github.io/Note/images/avatar.png?v=1556639204514" class="site-logo">
+        <h1 class="site-title">Windlike的小屋子</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="https://mrwindlike.github.io/Note" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="https://mrwindlike.github.io/Note/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://juejin.im/user/59f6e985f265da431d3bf69f" class="site-nav">
+            掘金
+          </a>
+        
+      
+        
+          <a href="https://github.com/MrWindlike" class="site-nav">
+            Github
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">前端面试知识点</h2>
+            <div class="post-date">2019-04-30</div>
+            
+              <div class="feature-container" style="background-image: url('https://static.oschina.net/uploads/space/2017/0704/151020_3LfC_2896879.png')">
+              </div>
+            
+            <div class="post-content">
+              <p>敲黑板啦！这里有新鲜热辣的前端知识点，包括的内容有计算机网络、JS、CSS、HTML以及性能优化，色香味俱全。</p>
+<!-- more -->
+<h2 id="计算机网络">计算机网络</h2>
+<h3 id="浏览器缓存">浏览器缓存</h3>
+<h4 id="强缓存">强缓存</h4>
+<p>HTTP状态码为<code>200(from cache)</code>，它的优点是没有访问服务器，直接在本地读取缓存，减少HTTP请求，但也因为如此，这也是它的缺点，因为它不知道服务器资源是否有更新，从而无法获取到最新的资源，这个问题通常用给静态资源添加Hash值来判断资源有无更新，若Hash值不同，则会请求获取最新资源。</p>
+<p>相关Header有(按优先级排序)：</p>
+<ol>
+<li><code>Cache-Control</code>。设定一个最大有效期，如<code>Cache-Control: max-age=3600</code></li>
+<li><code>Expires</code>。它描述一个最后的过期时间，如<code>Expires: Tue, 17 Jul 2018 15:42:01 GMT</code></li>
+</ol>
+<h4 id="协商缓存">协商缓存</h4>
+<p>HTTP状态码为<code>304</code>，当没有强缓存或者强缓存过期时，会发送请求到服务器，若服务器发现资源没有更新，则返回<code>304</code>告诉客户端不必更新。因为它还是要发送请求，所以比强缓存慢。</p>
+<p>相关Header有(按优先级排序)：</p>
+<ol>
+<li><code>ETag</code>、<code>If-None-Match</code></li>
+<li><code>Last-Modified</code>、<code>If-Modified-Since</code></li>
+</ol>
+<h3 id="get和post的区别">GET和POST的区别</h3>
+<p>GET和POST都是基于TCP/IP，所以本质上并无区别。他们都可以在链接里添加参数，也可以都带有Request Body，但是为区分开请求的类别，负责不同的分工，因此将它们附上不同的名字，他们都有自己的语义。</p>
+<ul>
+<li><code>GET</code>:
+<code>GET</code>方法一般用来获取数据，通常通过URL来传递数据，虽然理论上URL可以为无限长度，但数据量太大的话对浏览器和服务器都有很大负担，因此大多数浏览器限制在2K个字节。虽然也可以用Request Body，但有些服务器会处理，有些会忽略。<code>GET</code>只会产生一个TCP数据包。</li>
+<li><code>POST</code>:<code>POST</code>一般用来新建数据，会产生两个数据包，浏览器先发送Headers，等服务器响应<code>100 Continue</code>后再发送Data，因此消耗的时间比<code>GET</code>要多一些。</li>
+</ul>
+<h3 id="tcp三次握手-四次挥手">TCP三次握手、四次挥手</h3>
+<h4 id="三次握手">三次握手</h4>
+<ol>
+<li>浏览器向服务器发送想建立连接的请求「在吗」；</li>
+<li>服务器向浏览器发送同意建立连接的响应「在的」；</li>
+<li>浏览器向服务器发送确认收到响应的请求，客户端和服务器建立连接「开始聊天」。</li>
+</ol>
+<h4 id="四次挥手">四次挥手</h4>
+<ol>
+<li>浏览器向服务器发送想断开连接的请求「再见啦」；</li>
+<li>服务器向浏览器发送收到请求的响应「好的，我看看数据传输完没有」；</li>
+<li>服务器向浏览器发送断开连接的请求「数据传输完啦，可以断开」；</li>
+<li>浏览器断开连接并向服务器发送一个反馈请求，服务器收到后断开连接「好的，拜拜」。</li>
+</ol>
+<h3 id="同源策略">同源策略</h3>
+<p>协议、域名和端口都相同的属于同源。
+以下不受同源策略限制：</p>
+<ul>
+<li><code>&lt;script/&gt;</code>、<code>&lt;link/&gt;</code>、<code>&lt;img/&gt;</code>、<code>&lt;iframe/&gt;</code>等标签</li>
+<li>页面中的链接，重定向以及表单提交</li>
+</ul>
+<h3 id="跨域">跨域</h3>
+<p>受同源策略的影响，未经授权的情况下不同源的客户端间不能读取对方资源。
+解决办法：</p>
+<ul>
+<li><a href="#JSONP">JSONP</a></li>
+<li><code>&lt;iframe/&gt;</code></li>
+<li>服务端设置相关Headers，如<code>Access-Control-Allow-Origin</code>、<code>Access-Control-Allow-Methods</code>、<code>Access-Control-Allow-Headers</code>等</li>
+<li>对于二级域名相同的，可设置<code>document.domain</code></li>
+</ul>
+<h2 id="js">JS</h2>
+<h3 id="异步">异步</h3>
+<ul>
+<li>
+<p><code>setTimeout</code></p>
+</li>
+<li>
+<p><code>callback</code></p>
+</li>
+<li>
+<p><code>Promise</code></p>
+<pre><code class="language-JS">const promise = new Promise(function(resolve, reject){
+  ...
+  if(!err) {
+    resolve(data);
+  } else {
+      reject(err);
+  }
+});
+
+promise.then(function(data){
+  console.log(data);
+});
+</code></pre>
+<p><code>Promise</code>有三种状态：</p>
+<ul>
+<li><code>Resolved</code></li>
+<li><code>Pending</code></li>
+<li><code>Rejected</code></li>
+</ul>
+</li>
+<li>
+<p><code>Generator</code></p>
+<pre><code class="language-JS">function* generatorFn(){
+  const url = 'https://api.github.com/users/github';
+  const result = yield fetch(url);
+}
+
+const generator = generatorFn();
+const result = generator.next();
+</code></pre>
+</li>
+</ul>
+<h3 id="this"><code>this</code></h3>
+<p>关于<code>this</code>的指向问题只需记住谁调用这个函数<code>this</code>就指向谁。</p>
+<pre><code class="language-JS">const obj = {
+    key: 'value',
+    getKey() {
+      console.log(this.key);
+      return this.key;
+    }
+}
+const getKey = obj.getKey;
+
+obj.getKey();  // value
+// 相当于window.getKey()，所以this指向window，但window.key为undefined
+// 需要注意的是在严格模式下，没有指明调用该函数的对象的话，this为undefined
+getKey();  // undefined
+window.key = 'windowValue';
+getKey();  // windowValue
+</code></pre>
+<h3 id="jsonp">JSONP</h3>
+<p>因为<code>&lt;script/&gt;</code>标签不受同源策略的限制，所以可以利用它来实现跨域，实现JSONP的步骤如下：</p>
+<ol>
+<li>现在客户端创建一个回调函数，用于服务端返回数据回调：</li>
+</ol>
+<pre><code class="language-JS">function callback(data) {
+    console.log(data);
+}
+</code></pre>
+<ol start="2">
+<li>创建<code>&lt;script/&gt;</code>标签，地址为要请求的地址，并在参数里传递回调函数的名字如</li>
+</ol>
+<pre><code class="language-HTML">&lt;script src=&quot;http://www.example.com/api?callbackName=callback&quot;/&gt;
+</code></pre>
+<ol start="3">
+<li>服务端根据回调函数名动态返回Javascript代码，这样就会调用我们创建好的回调函数，并把数据作为参数传进去。</li>
+</ol>
+<pre><code class="language-JS">// 这是服务端返回的脚本代码
+callback({code: 200, message: 'OK'});
+</code></pre>
+<ol start="4">
+<li>完成后移除<code>&lt;script/&gt;</code></li>
+</ol>
+<p>具体实现代码如下(客户端)：</p>
+<pre><code class="language-JS">const jsonp = function(url: string, name: string = 'jsonpCallback'): Promise&lt;{}&gt; {
+	return new Promise((resolve, reject)=&gt; {
+		let jsonpCallback: string = `jsp_${(new Date).getTime()}`;
+		let target = document.getElementsByTagName('script')[0] || document.head;
+		let script = document.createElement('script');
+
+		let hasParams = ()=&gt; url.includes('?');
+		let addJsonpCallback = ()=&gt; hasParams() ? `${url}&amp;${name}=${jsonpCallback}` : `${url}?${name}=${jsonpCallback}`;
+		let createScript = ()=&gt; {
+			url = addJsonpCallback();
+			script.src = url;
+			script.onerror = (err: never)=&gt; { cleanUp(); reject(err); }  // 添加错误处理
+			target.parentNode.insertBefore(script, target);  // 插入&lt;script/&gt;
+		};
+		let cleanUp = ()=&gt; {
+			window[jsonpCallback] = undefined;
+			target.parentNode.removeChild(script);
+		};
+		
+		// 创建回调函数用于服务器返回脚本进行回调
+		window[jsonpCallback] = (data: any)=&gt; {
+		        // 完成后清除&lt;script/&gt;并传递数据
+			cleanUp();
+			resolve(data);
+		};
+
+		createScript();
+	});
+}
+</code></pre>
+<h3 id="事件模型">事件模型</h3>
+<h3 id="set-map-weakmap"><code>Set</code>、<code>Map</code>、<code>WeakMap</code></h3>
+<h4 id="set"><code>Set</code></h4>
+<p><code>Set</code>是一种类似与数组的数据结构，但它没有重复的值，我们可以利用这个实现数组的去重。</p>
+<pre><code class="language-JS">const array = [1, 9, 9, 6];
+const newArray = [...new Set(array)];  // [1, 9, 6]
+</code></pre>
+<p>拥有的方法：</p>
+<ul>
+<li>add(value)：添加某个值，返回 Set 结构本身。</li>
+<li>delete(value)：删除某个值，返回一个布尔值，表示删除是否成功。</li>
+<li>has(value)：返回一个布尔值，表示该值是否为Set的成员。</li>
+<li>clear()：清除所有成员，没有返回值。</li>
+</ul>
+<h4 id="map"><code>Map</code></h4>
+<p><code>Map</code>是一种类似于对象的数据结构，但它的键可以不只是字符串，可以是任何类型，对象也可以作为键。</p>
+<h4 id="weakmap"><code>WeakMap</code></h4>
+<ul>
+<li>只能用对象作为键</li>
+<li>作为键的对象不计入垃圾回收机制</li>
+</ul>
+<h3 id="事件委托delegate-当点击li时弹出它的内容动态加入的li也会触发">事件委托(Delegate): 当点击<code>li</code>时弹出它的内容，动态加入的<code>li</code>也会触发。</h3>
+<pre><code class="language-HTML">&lt;ul&gt;
+  &lt;li&gt;0&lt;/li&gt;
+  &lt;li&gt;1&lt;/li&gt;
+  &lt;li&gt;2&lt;/li&gt;
+  &lt;li&gt;3&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<pre><code class="language-JS">var ul = document.getElementsByTagName('ul')[0];
+
+//  因为子元素的事件会冒泡到父元素，在父元素监听事件就好
+ul.addEventListener('click', function (e) {
+  if(e.target.tagName.toUpperCase() === 'LI') {
+      alert(e.target.innerHTML);
+  }
+}, false);
+</code></pre>
+<h3 id="ajax">Ajax</h3>
+<pre><code class="language-JS">var request = new XMLHttpRequest(); // 新建XMLHttpRequest对象
+request.onreadystatechange = function () { // 状态发生变化时，函数被回调
+    if (request.readyState === 4) { // 成功完成
+        // 判断响应结果:
+        if (request.status === 200) {
+            // 成功，通过responseText拿到响应的文本:
+            return success(request.responseText);
+        } else {
+            // 失败，根据响应码判断失败原因:
+            return fail(request.status);
+        }
+    } else {
+        // HTTP请求还在继续...
+    }
+}
+
+// 发送请求:
+request.open('GET', '/api/categories');
+request.send();
+</code></pre>
+<h3 id="requestanimationframe">requestAnimationFrame</h3>
+<p>优点：
+相比与<code>setTimeout</code>，<code>requestAnimationFrame</code>会根据浏览器的显示频率进行调用，这样就不会造成丢失动画帧的问题。
+使用(伪代码)：</p>
+<pre><code class="language-JS">// 兼容性处理
+window.requestAnimationFrame = (function() {
+    return  window.requestAnimationFrame       ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            function( callback ){
+              window.setTimeout(callback, 1000 / 60);
+            };
+})();
+window.cancelAnimationFrame = (function() {
+    return  window.requestAnimationFrame       ||
+            window.webkitCancelAnimationFrame ||
+            window.mozCancelAnimationFrame    ||
+            function( timer ){
+              window.clearTimeout(timer);
+            };
+})();
+
+let timer = null;
+
+function beginAnimation() {
+    if(isFinished) {
+        cancelAnimationFrame(timer);
+    } else {
+        timer = requestAnimationFrame(beginAnimation);
+    }
+}
+</code></pre>
+<h3 id="闭包">闭包</h3>
+<p>我的理解是当一个函数记住父级或更高级作用域里的变量时，这个函数就是闭包，闭包通常在函数式编程有大量运用，这样的好处是可以把一些变量缓存起来，提高效率。</p>
+<pre><code class="language-JS">function add(firstNum) {
+    return function(secondNum) {
+        const result = firstNum + secondNum;  // firstNum是父级作用域里的变量
+        
+        console.log(result);
+        return result;  
+    }
+}
+
+const addOne = add(1);
+addOne(2);  // 3
+add(1)(1); // 2
+</code></pre>
+<h3 id="原型与原型链">原型与原型链</h3>
+<p>当对象寻找一个属性时先看看自己有没有，没有的话就到构造函数的原型上找，再没有的话继续往上一个原型查找，一直到原型为<code>undefined</code>为止，这就形成原型链。</p>
+<pre><code class="language-JS">function User(name) {
+    this.name = name;
+}
+
+User.prototype.getName = function() {
+    return this.name;
+}
+
+const user = new User('Windlike');
+user.getName();  // 实例本身没有这个方法，然后到user.__proto__(即User.prototype)上查找
+user.toString(); // 本身没有，User.prototype也没有，再往上在Object.prototype上找到
+</code></pre>
+<h2 id="css">CSS</h2>
+<h3 id="盒子模型">盒子模型</h3>
+<p>描述一个元素所占大小的模型，一个元素有内容、<code>padding</code>、<code>border</code>和<code>margin</code>组成，看起来就像构成一个盒子。</p>
+<p><code>box-sizing</code>:</p>
+<ul>
+<li><code>content-box</code>: <code>width</code>、<code>height</code>指的是内容的宽高。</li>
+<li><code>border-box</code>: <code>width</code>、<code>height</code>指的是内容的宽高加<code>padding</code>加<code>border</code>的总宽高。</li>
+</ul>
+<h3 id="水平垂直居中">水平垂直居中</h3>
+<ol>
+<li></li>
+</ol>
+<pre><code class="language-CSS">.parent {
+    position: relative;
+}
+
+.center {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+</code></pre>
+<ol start="2">
+<li></li>
+</ol>
+<pre><code class="language-CSS">.parent {
+    position: relative;
+}
+
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+</code></pre>
+<ol start="3">
+<li></li>
+</ol>
+<pre><code class="language-CSS">.parent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+</code></pre>
+<h3 id="position"><code>position</code></h3>
+<ul>
+<li><code>static</code>: 默认值</li>
+<li><code>relative</code>: 相对定位，根据自身位置来进行定位。</li>
+<li><code>absolute</code>: 绝对定位，脱离文档流，若父级节点的position属性不为static，则根据父级节点位置进行定位；否则则继续寻找上一级position属性不为static的节点进行定位，若都没有找到，则以视窗进行定位。</li>
+<li><code>fixed</code>: 脱离文档流，根据视窗定位。</li>
+</ul>
+<h3 id="animation"><code>animation</code></h3>
+<pre><code class="language-CSS">@keyframes rotate {
+    0% {
+        transform: rotate(0);
+    }
+    
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.rotate {
+    /* animation: name duration timing-function delay iteration-count direction */
+    animation: rotate 1s ease infinite;
+}
+</code></pre>
+<h3 id="左定宽右适应">左定宽，右适应</h3>
+<ol>
+<li></li>
+</ol>
+<pre><code class="language-CSS">.parent {
+    display: flex;
+}
+
+.letf {
+    flex: 1;
+}
+
+.right {
+    width: 200px;
+}
+</code></pre>
+<ol start="2">
+<li></li>
+</ol>
+<pre><code class="language-CSS">.left {
+    width: 100px;
+    height: 100px;
+    float: left;
+}
+
+.right {
+    height: 100px;
+    overflow: hidden;
+}
+</code></pre>
+<h3 id="bfcblock-formatting-context">BFC(Block Formatting Context)</h3>
+<p>BFC为块级格式化上下文，满足一下条件之一会触发BFC:</p>
+<ol>
+<li>根元素或其它包含它的元素</li>
+<li><code>float</code>的值不为<code>none</code>；</li>
+<li><code>overflow</code>的值不为<code>visible</code>；</li>
+<li><code>position</code>的值不为<code>static</code>；</li>
+<li><code>display</code>的值为<code>inline-block</code>、<code>table-cell</code>、<code>table-caption</code>、<code>flex</code>、<code>inline-flex</code>；</li>
+</ol>
+<p>应用场景有解决<code>margin</code>重叠问题，和上面的左定宽，右适应的第二种方法就是利用BFC的原理。</p>
+<h3 id="flex布局"><code>flex</code>布局</h3>
+<p><a href="http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html">Flex 布局教程：语法篇</a></p>
+<h2 id="html">HTML</h2>
+<h2 id="浏览器与性能优化">浏览器与性能优化</h2>
+<h3 id="页面重绘和回流">页面重绘和回流</h3>
+<p>当Render Tree中的一部分(或全部)因为元素的规模尺寸，布局，隐藏等改变而需要重新构建。这就称为回流(reflow)。</p>
+<p>引起回流的通常有：</p>
+<ul>
+<li>删除或添加元素</li>
+<li>元素的大小改变</li>
+<li>元素脱离文档流</li>
+<li>元素被隐藏</li>
+<li>元素位置改变</li>
+<li>浏览器窗口大小改变</li>
+</ul>
+<p>只要样式改变就会引起重绘，如<code>background-color</code>这些改变都会引起重绘。回流必将引起重绘，而重绘不一定会引起回流。</p>
+<h3 id="在浏览器输入url后回车">在浏览器输入URL后回车</h3>
+<ol>
+<li>
+<h4 id="解析域名">解析域名</h4>
+先寻找DNS缓存，和hosts文件，都没有找到的话，向DNS服务器查询IP，以最快的速度返回IP。</li>
+<li>
+<h4 id="建立tcp链接进行三次握手">建立TCP链接，进行<a href="#%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B">三次握手</a></h4>
+</li>
+<li>
+<h4 id="互相通信">互相通信</h4>
+</li>
+<li>
+<h4 id="解析html">解析HTML</h4>
+HTML文件传输完成后，开始解析DOM树和CSSOM树，遇到文件会进行下载。当遇到<code>&lt;script/&gt;</code>标签时会停下并执行脚本，如果<code>&lt;script/&gt;</code>标签有<code>defer</code>属性则并行加载，等都加载完后按顺序执行，有<code>async</code>属性则并行加载并执行（不按顺序）。当DOM树解析完成后，触发<code>DOMContentLoaded</code>事件，并开始构建Render树，确定页面的布局和样式。</li>
+<li>
+<h4 id="渲染">渲染</h4>
+最后浏览器调用GUI来渲染Render树，并显示在屏幕上。</li>
+</ol>
+<h3 id="浏览器渲染机制">浏览器渲染机制</h3>
+<h3 id="性能优化">性能优化</h3>
+<ol>
+<li>
+<p>网络</p>
+<ul>
+<li>
+<p>DNS预解析</p>
+<pre><code class="language-html">&lt;meta http-equiv=&quot;x-dns-prefetch-control&quot; content=&quot;on&quot;&gt;
+</code></pre>
+<pre><code class="language-html">&lt;link rel=&quot;dns-prefetch&quot; href=&quot;http://www.spreadfirefox.com/&quot;&gt;
+</code></pre>
+</li>
+<li>
+<p>使用HTTP2</p>
+<p>HTTP2可多路复用，即多个请求使用同一个TCP连接，而不必浪费时间建立多个TCP连接。
+HTTP2还可以进行Header压缩。</p>
+</li>
+<li>
+<p>域名发散</p>
+<p>浏览器对每个域名下的请求有限制。在PC端，可以把静态资源放置在多个不同的域名下，可以加多同一时间内的资源请求数。</p>
+</li>
+<li>
+<p>域名收敛</p>
+<p>因为在手机端上域名解析的速度要比PC端慢很多，所以尽量把静态资源放在同一个域名下可加快速度。</p>
+</li>
+<li>
+<p><a href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98">缓存静态资源</a></p>
+</li>
+<li>
+<p>使用雪碧图，减少HTTP请求</p>
+</li>
+<li>
+<p>压缩代码</p>
+</li>
+<li>
+<p>CDN</p>
+</li>
+</ul>
+</li>
+<li>
+<p>DOM树解析&amp;首屏渲染</p>
+<ul>
+<li>CSS放在头部，<code>&lt;script/&gt;</code>放在<code>&lt;body&gt;</code>尾部</li>
+<li><code>&lt;script/&gt;</code>使用<code>defer</code>和<code>async</code></li>
+<li>一些不是那么重要的脚本可稍后再引入</li>
+<li>单页面应用按路由按需引用</li>
+<li>如果不考虑兼容低版本浏览器，尽量使用ES6+代码；兼容低版本浏览器可使用动态polyfill，可使用<code>&lt;script type=&quot;module&quot; src=&quot;/es6.js&quot;/&gt;</code>和<code>&lt;script nomodule src=&quot;/es5.js&quot;/&gt;</code>使支持ES6代码 的浏览器加载ES6的脚本，不支持的加载ES5</li>
+</ul>
+</li>
+<li>
+<p>其他</p>
+<ul>
+<li>如果涉及大量计算的JS可使用Web Worker</li>
+<li><a href="https://juejin.im/post/5b83aa3ef265da43506e986e">Webpack优化</a></li>
+<li>减少会触发回流的操作</li>
+<li>减少对DOM的操作次数</li>
+</ul>
+</li>
+</ol>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://mrwindlike.github.io/Note/tag/front-end" class="tag">
+                    前端
+                  </a>
+                
+                  <a href="https://mrwindlike.github.io/Note/tag/interview" class="tag">
+                    面试
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://mrwindlike.github.io/Note/post/react-yuan-ma-yue-du-xu-ni-dom">
+                  <h3 class="post-title">
+                    React源码阅读——虚拟DOM
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '',
+        clientSecret: '',
+        repo: '',
+        owner: '',
+        admin: [''],
+        id: location.pathname,      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>
