@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Webpack优化策略 | Windlike的小屋子</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://mrwindlike.github.io/Note/favicon.ico?v=1565013572765">
+<link rel="stylesheet" href="https://mrwindlike.github.io/Note/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://mrwindlike.github.io/Note">
+        <img src="https://mrwindlike.github.io/Note/images/avatar.png?v=1565013572765" class="site-logo">
+        <h1 class="site-title">Windlike的小屋子</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="https://mrwindlike.github.io/Note" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="https://mrwindlike.github.io/Note/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://juejin.im/user/59f6e985f265da431d3bf69f" class="site-nav">
+            掘金
+          </a>
+        
+      
+        
+          <a href="https://github.com/MrWindlike" class="site-nav">
+            Github
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Webpack优化策略</h2>
+            <div class="post-date">2019-08-05</div>
+            
+              <div class="feature-container" style="background-image: url('http://statics.siguoya.name/img/pc/home/article/cover/20170613/webpack-2-FsnRuc4PlL.jpg')">
+              </div>
+            
+            <div class="post-content">
+              <p>本文写的是基于 Webpack 4 所做的一些优化，比如提高构建速度，提高构建代码的质量，提升开发体验。</p>
+<!-- more -->
+<h2 id="前言">前言</h2>
+<p>本文写的是基于 Webpack 4 所做的一些优化，比如提高构建速度，提高构建代码的质量，提升开发体验。</p>
+<h2 id="构建优化">构建优化</h2>
+<h3 id="mode">Mode</h3>
+<p>使用 <code>production</code> 生产模式。</p>
+<pre><code class="language-js">module.exports = {
++  mode: 'production',
+-  plugins: [
+-    new UglifyJsPlugin(/* ... */),
+-    new webpack.DefinePlugin({ &quot;process.env.NODE_ENV&quot;: JSON.stringify(&quot;production&quot;) }),
+-    new webpack.optimize.ModuleConcatenationPlugin(),
+-    new webpack.NoEmitOnErrorsPlugin()
+-  ]
+}
+</code></pre>
+<h3 id="module">Module</h3>
+<h4 id="modulenoparse"><code>module.noParse</code></h4>
+<p>过滤不需要处理的文件，比如不依赖其他库的库。</p>
+<pre><code class="language-js">module.exports = {
+  ...
+  module: {
+    noParse: /node_modules\/(moment|chart|jquery|lodash\.js)/,
+  }
+};
+</code></pre>
+<h3 id="loaders">Loaders</h3>
+<h4 id="优化建议">优化建议</h4>
+<ul>
+<li>使用 <code>include</code> 属性告知 loader 要查找的文件夹</li>
+<li>使用 <code>exclude</code> 属性排除 loader 要查找的文件夹</li>
+<li>使用 happypack 开启多线程处理（见下文）</li>
+</ul>
+<h4 id="babel-loader">babel-loader</h4>
+<p>使用 <code>cacheDirectory</code> 属性将转换结果缓存，Webpack 会尝试读取缓存，加快构建速度。</p>
+<pre><code class="language-js">module.exports = {
+  ...
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        include: path.resolve(__dirname, 'src'),
+        exclude: path.resolve(__dirname, 'node_modules'),
+        loader: 'babel-loader?cacheDirectory=true',  // 使用缓存
+      }
+    ]
+  }
+};
+</code></pre>
+<h4 id="eslint-loader">eslint-loader</h4>
+<p>同样开启缓存。</p>
+<pre><code class="language-js">module.exports = {
+  ...
+  module: {
+    rules: [
+      {
+        test: /\.(js|mjs|jsx)$/,
+        enforce: 'pre',
+        use: [
+            {
+              options: {
+                cache: path.resolve('node_modules', '.cache', 'eslint-loader'),
+              },
+              loader: require.resolve('eslint-loader'),
+            },
+        ],
+      }
+    ]
+  }
+};
+</code></pre>
+<h4 id="cache-loader">cache-loader</h4>
+<p>有些 loader 可能没有自带缓存功能，可使用 cache-loader 对结果进行缓存。</p>
+<pre><code class="language-js">module.exports = {
+  ...
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+            'style-loader',
+            'css-loader',
+            {
+                loader: 'cache-loader',
+                options: {
+                    cacheDirectory: path.join('node_modules', '.cache', 'cache-loader-css')
+                }
+            }
+        ]
+      }
+    ]
+  }
+};
+</code></pre>
+<h4 id="thread-loader">thread-loader</h4>
+<p>和 happypck 类似，它会把 loader 放进一个单独的 worker 池中运行。</p>
+<pre><code class="language-js">module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        include: path.resolve(&quot;src&quot;),
+        use: [
+          &quot;thread-loader&quot;,
+          // your expensive loader (e.g babel-loader)
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<h3 id="resolve">Resolve</h3>
+<h4 id="resolvemodules"><code>resolve.modules</code></h4>
+<pre><code class="language-js">module.exports = {
+    ...
+    resolve: {
+      modules: [path.resolve(__dirname, 'node_modules')]
+    }
+};
+</code></pre>
+<h4 id="resolvealias"><code>resolve.alias</code></h4>
+<p>可通过 <code>resolve.alias</code> 属性直接使用库的生产版本，Webpack 不必再对其进行处理。另外还可以对文件路径使用别名，方便引用文件。</p>
+<pre><code class="language-js">module.exports = {
+    ...
+    resolve: {
+      alias: {
+        Components: path.resolve(__dirname, 'src/components/'),
+        Utils: path.resolve(__dirname, 'src/utils/'),
+        react: patch.resolve(__dirname, './node_modules/react/dist/react.min.js')
+      }
+    }
+};
+</code></pre>
+<pre><code class="language-js">// import Component form 'src/components/component';
+import Component form 'Components/component';
+</code></pre>
+<p>但是使用别名还有一个问题，就是 VSCode 无法找到相关的引用文件，解决办法就是添加 <code>jsconfig.json</code> 文件，这样就可以愉快地使用 VSCode 啦！</p>
+<pre><code class="language-json">// jsconfig.json
+{
+  &quot;compilerOptions&quot;: {
+    &quot;baseUrl&quot;: &quot;.&quot;,
+    &quot;paths&quot;: {
+      &quot;Components/*&quot;: [&quot;./src/components/*&quot;],
+      &quot;Utils/*&quot;: [&quot;./src/assets/*&quot;],
+    }
+  },
+  &quot;include&quot;: [&quot;./src/**/*&quot;]
+}
+</code></pre>
+<h4 id="resolveextensions"><code>resolve.extensions</code></h4>
+<p>设置 <code>resolve.extensions</code> 属性告知 Webpack 需要处理的文件类型。</p>
+<pre><code class="language-js">module.exports = {
+  ...,
+  resolve: {
+    extensions: ['.js', '.json', 'jsx']
+  }
+}
+</code></pre>
+<h3 id="optimization">Optimization</h3>
+<h4 id="optimizationsplitchunks"><code>optimization.splitChunks</code></h4>
+<p>把多次引用的代码提取到 chunks 文件中，然后通过动态加载的方式使用，可以提高首屏加载速度，避免一次性加载过多的脚本代码。</p>
+<pre><code class="language-js">module.exports = {
+  ...
+  optimization: {
+    ...
+    splitChunks: {
+      chunks: 'all',
+      name: true,
+      automaticNameDelimiter: '-',
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10  // 优先级，值越小优先级越高
+        },
+        react: {
+          test({ resource }) {
+            return /[\\/]node_modules[\\/](react|redux)/.test(resource);
+          },
+          name: 'react',
+          priority: -15,
+          reuseExistingChunk: true,
+        },
+        antd: {
+          test: /[\\/]node_modules[\\/]antd/,
+          name: 'antd',
+          priority: -15,
+          reuseExistingChunk: true,
+        },
+        default: {  // 默认设置，可被重写
+          minChunks: 2,  // 最小被引用数，只有大于这个值才会被分离出 chunks
+          priority: -20,
+          reuseExistingChunk: true  // 重用已存在的 chunks
+        }
+      }
+    }
+  },
+}
+
+</code></pre>
+<h4 id="optimizationruntimechunk"><code>optimization.runtimeChunk</code></h4>
+<p>当该属性被设为 <code>singin</code> 或者 <code>{ name: 'string' }</code> 时会创建一个所有 chunks 共享的运行时文件，而不是每个 chunks 都会包含运行时的代码，减小文件体积。</p>
+<pre><code class="language-js">module.exports = {
+  //...
+  optimization: {
+    runtimeChunk: {
+      name: 'runtime'
+    }
+  }
+};
+</code></pre>
+<h3 id="plugins">Plugins</h3>
+<h4 id="happypack">happypack</h4>
+<p>使用 happypack 来让 loader 开启多线处理文件，有些 loader 是不支持使用 happypack 的，需要自行尝试。尽量只启用需要处理大量文件的 loader ，因为启动线程也需要花费许多时间。</p>
+<pre><code class="language-js">var HappyPack = require('happypack');
+
+module.exports = {
+    ...
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        include: path.resolve(__dirname, 'src'),
+        exclude: path.resolve(__dirname, 'node_modules'),
+        use: 'happypack/loader?id=babel'
+      },
+    ],
+    plugins: [
+      new HappyPack({
+        threads: 2,  // 线程数
+        id: 'babel',
+        loaders: ['babel-loader?cacheDirectory=true']
+      }),
+    ],
+}
+
+</code></pre>
+<h4 id="lodash-webpack-plugin">lodash-webpack-plugin</h4>
+<p>按需打包 lodash 。</p>
+<pre><code class="language-js">const LodashPlugin = require('lodash-webpack-plugin');
+
+module.exports = {
+    plugins: [
+      new LodashPlugin(),
+    ],
+}
+</code></pre>
+<h2 id="开发优化">开发优化</h2>
+<h3 id="mode-2">Mode</h3>
+<p>启用 <code>development</code> 开发模式。</p>
+<pre><code class="language-js">module.exports = {
++ mode: 'development'
+- devtool: 'eval',
+- plugins: [
+-   new webpack.NamedModulesPlugin(),
+-   new webpack.NamedChunksPlugin(),
+-   new webpack.DefinePlugin({ &quot;process.env.NODE_ENV&quot;: JSON.stringify(&quot;development&quot;) }),
+- ]
+}
+</code></pre>
+<h3 id="plugins-2">Plugins</h3>
+<h4 id="provideplugin">ProvidePlugin</h4>
+<p>该插件会自动引用所定义好的库。</p>
+<pre><code class="language-js">module.exports = {
+    plugins: [
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+            Vue: 'vue',
+            mapState: ['vuex', 'mapState'],
+            mapActions: ['vuex', 'mapActions']
+        })
+    ]
+}
+
+</code></pre>
+<p>然后在项目中可以直接使用这些变量，而无需引入。</p>
+<pre><code class="language-js">// import Vue from 'vue';
+
+new Vue({...});
+
+</code></pre>
+<h2 id="总结">总结</h2>
+<ol>
+<li>不同环境下使用不同的 Webpack 模式；</li>
+<li>定义好要 Webpack 所处理的文件和无需处理的文件（文件类型、文件路径等等）；</li>
+<li>使用 loader 的缓存功能，将构建结果缓存，并且使用相关工具（happypack, thread-loader）开启多线程处理耗时较大的 loader；</li>
+<li>重用已存在的 chunks；</li>
+<li>开发环境下取消构建的一些代码优化（压缩代码，代码转换等等）；</li>
+<li>使用 ProvidePlugin 自动引用相关的库文件；</li>
+</ol>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://mrwindlike.github.io/Note/tag/webpack" class="tag">
+                    Webpack
+                  </a>
+                
+                  <a href="https://mrwindlike.github.io/Note/tag/front-end" class="tag">
+                    前端
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://mrwindlike.github.io/Note/post/qian-duan-mian-shi-zhi-shi-dian">
+                  <h3 class="post-title">
+                    前端面试知识点
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '',
+        clientSecret: '',
+        repo: '',
+        owner: '',
+        admin: [''],
+        id: location.pathname,      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>
