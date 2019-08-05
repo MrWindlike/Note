@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://mrwindlike.github.io/Note</id>
     <title>Windlike的小屋子</title>
-    <updated>2019-08-05T14:08:02.621Z</updated>
+    <updated>2019-08-05T14:11:39.859Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://mrwindlike.github.io/Note"/>
     <link rel="self" href="https://mrwindlike.github.io/Note/atom.xml"/>
@@ -16,12 +16,12 @@
         <link href="https://mrwindlike.github.io/Note/post/webpack-optimization">
         </link>
         <updated>2019-08-05T13:58:10.000Z</updated>
-        <summary type="html"><![CDATA[<p>本文写的是基于 Webpack 4 所做的一些优化，比如提高构建速度，提高构建代码的质量，提升开发体验。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>本文写的是基于 Webpack 4 所做的一些优化，比如提高构建速度，提高构建代码的质量，提升开发体验。</p>
-<!-- more -->
-<h2 id="前言">前言</h2>
+        <summary type="html"><![CDATA[<h2 id="前言">前言</h2>
 <p>本文写的是基于 Webpack 4 所做的一些优化，比如提高构建速度，提高构建代码的质量，提升开发体验。</p>
+]]></summary>
+        <content type="html"><![CDATA[<h2 id="前言">前言</h2>
+<p>本文写的是基于 Webpack 4 所做的一些优化，比如提高构建速度，提高构建代码的质量，提升开发体验。</p>
+<!-- more -->
 <h2 id="构建优化">构建优化</h2>
 <h3 id="mode">Mode</h3>
 <p>使用 <code>production</code> 生产模式。</p>
